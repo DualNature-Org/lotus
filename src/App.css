@@ -1,0 +1,36 @@
+body {
+  max-width: 1280px;
+  text-align: center;
+  padding: 0rem;
+  margin: 0rem;
+}
+
+.statusbar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 0.5rem;
+
+}
+.left{
+  display: flex;
+
+}
+.left h2{
+  font-family: monospace;
+  color:aqua;
+  margin: 0rem 2rem;
+  
+}
+
+.right{
+  display: 'flex';
+  justify-content: center;
+  
+}
+
+.icons{
+  color: #fff;
+  margin: 0rem 0.3rem;
+}
