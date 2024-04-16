@@ -1,55 +1,61 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import './conversation.css'
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import TextArea from './textarea';
 
-const Conversation = () => {
-  const [systemPrompt, setSystemPrompt] = useState('Set a System Prompt (Optional)');
+
+
+function Conversation(){
   const [userInput, setUserInput] = useState('');
   const [assistantResponse, setAssistantResponse] = useState('Enter Claude\'s response...');
   const [conversations, setConversations] = useState([]);
 
-  const handleUserInput = (event) => {
-    setUserInput(event.target.value);
-  };
+  const [value, setValue] = useState('');
 
-  const handleAssistantResponse = (event) => {
-    setAssistantResponse(event.target.value);
+  const handleChange = (event) => {
+    setValue(event.target.value);
   };
 
   const handleAddMessage = () => {
     setConversations([
       ...conversations,
-      { user: userInput, assistant: assistantResponse },
+      { user: userInput},
     ]);
     setUserInput('');
-    setAssistantResponse('Enter Claude\'s response...');
+    setAssistantResponse('Enter Lotus\'s response...');
   };
 
   return (
     <Box>
-      <Box className="system-prompt">
-        <TextField label="SYSTEM PROMPT" value={systemPrompt} InputProps={{ readOnly: true }} />
-      </Box>
-      <Box className="user-input">
-        <TextField label="USER" value={userInput} onChange={handleUserInput} />
-      </Box>
-      <Box className="assistant-response">
-        <TextField label="ASSISTANT" value={assistantResponse} onChange={handleAssistantResponse} multiline />
-      </Box>
-      <Box mt={2}>
-        <Button variant="contained" onClick={handleAddMessage}>
-          Add Messages
-        </Button>
-      </Box>
+      <TextArea label='LOTUS' value={"Hi, I'm LOTUS."}/>
       {conversations.map((conv, index) => (
         <Box key={index} mt={2}>
-          <Box>
-            <TextField label="USER" value={conv.user} InputProps={{ readOnly: true }} />
-          </Box>
-          <Box mt={1}>
-            <TextField label="ASSISTANT" value={conv.assistant} InputProps={{ readOnly: true }} multiline />
-          </Box>
+        <TextArea label="LOTUS"/>
         </Box>
       ))}
+      <Box className='querywrapper'>
+      <Tooltip placement='left' title='Add Messages'>
+        <IconButton>
+          <PlaylistAddIcon onClick={handleAddMessage}/>
+        </IconButton>
+      </Tooltip>
+      <TextField 
+          className='query'
+          label="Query"
+          id="outlined-size-small"
+          defaultValue="/"
+          size="small"
+          sx={{ width: '40vw' }}
+        />
+        <Button variant="text" endIcon={<SendIcon />}>
+          Send
+        </Button>
+      
+      </Box>
     </Box>
   );
 };

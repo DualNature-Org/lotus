@@ -27,7 +27,15 @@ function App() {
       <div className='right'>
         </div>
     </div>
-    <Conversation/>
+    <div className="main">
+      <div className="converstions">
+        <Conversation/>
+
+      </div>
+      <div className="preview">
+
+      </div>
+    </div>
     </>
   )
 }

@@ -1,5 +1,5 @@
 body {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   text-align: center;
   padding: 0rem;
   margin: 0rem;
@@ -9,7 +9,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
+  background-color: hsl(0deg 0.27% 8.79%);
   padding: 0.5rem;
 
 }
@@ -33,4 +33,17 @@ body {
 .icons{
   color: #fff;
   margin: 0rem 0.3rem;
+}
+
+.main{
+  display: flex;
+  justify-content: center;
+  background-color: #1f1e1e;
+  height: 94.5vh;
+}
+
+.conversations{
+  width: 60vw;
+  padding: 0.5rem;
+
 }
