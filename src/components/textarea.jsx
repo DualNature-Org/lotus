@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TextArea = ({ label, value, ...props }) => {
+const TextArea = ({ label, value, }) => {
   return (
     <div style={{ marginBottom: '1rem' }}>
       <label
@@ -27,7 +27,6 @@ const TextArea = ({ label, value, ...props }) => {
           color: '#fff',
           resize: 'none',
         }}
-        {...props}
       />
     </div>
   );

@@ -30,7 +30,6 @@ function App() {
     <div className="main">
       <div className="converstions">
         <Conversation/>
-
       </div>
       <div className="preview">
 

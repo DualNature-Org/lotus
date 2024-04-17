@@ -9,7 +9,6 @@ input{
     display: flex;
     align-items: center;
     justify-content:space-evenly;
-    width: 60vw;
-    left: 5rem;
-
+    width: 50vw;
+    left: 2rem;
 }

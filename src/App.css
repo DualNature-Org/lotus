@@ -37,7 +37,7 @@ body {
 
 .main{
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   background-color: #1f1e1e;
   height: 94.5vh;
 }
@@ -45,5 +45,9 @@ body {
 .conversations{
   width: 60vw;
   padding: 0.5rem;
+}
 
+.preview{
+  width: 40vw;
+  padding: .5rem;
 }
