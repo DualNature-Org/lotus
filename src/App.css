@@ -1,6 +1,7 @@
 body {
   /* max-width: 1280px; */
   text-align: center;
+  background-color: #1f1e1e;
   padding: 0rem;
   margin: 0rem;
 }
@@ -35,19 +36,3 @@ body {
   margin: 0rem 0.3rem;
 }
 
-.main{
-  display: flex;
-  justify-content: space-evenly;
-  background-color: #1f1e1e;
-  height: 94.5vh;
-}
-
-.conversations{
-  width: 60vw;
-  padding: 0.5rem;
-}
-
-.preview{
-  width: 40vw;
-  padding: .5rem;
-}
