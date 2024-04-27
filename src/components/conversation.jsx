@@ -14,9 +14,6 @@ function Conversation() {
   const [status, setStatus] = useState('1');
   const [conversations, setConversations] = useState([]);
   const [previewConversations, setPreviewConversations] = useState([
-    'This is a dummy message 1',
-    'This is a dummy message 2',
-    'This is a dummy message 3',
   ]);
 
   const [value, setValue] = useState('');
@@ -53,9 +50,9 @@ function Conversation() {
       })
       .then((data) => {
         console.log(data);
-        setConversations([
-          ...conversations,
-          { index: 1 + conversations[conversations.length - 1], text: data['output'] },
+        setPreviewConversations([
+          ...previewConversations,
+          data['output'],
         ]);
       })
       .catch((error) => {
@@ -81,45 +78,66 @@ function Conversation() {
   };
 
   return (
-    <Box sx={{ marginTop: '1rem', display: 'flex', flexDirection: 'row' }}>
-      <Box sx={{ flex: '1' }}>
-        <TextArea label='LOTUS' value={"Hi, I'm LOTUS."} />
-        {conversations.map((conv, index) => (
-          <TextArea label='LOTUS' key={index} mt={2} value={conv.text} />
-        ))}
-        <Box className='querywrapper'>
-          <Tooltip placement='left' title='Add Messages'>
-            <IconButton>
-              <PlaylistAddIcon onClick={() => handleAddMessage(query)} />
-            </IconButton>
-          </Tooltip>
-          <TextField
-            className='query'
-            label='Query'
-            id='outlined-size-small'
-            defaultValue='/'
-            size='small'
-            sx={{ width: '40vw' }}
-            onChange={updateQuery}
-          />
-          <Button variant='text' endIcon={<SendIcon />} value={query} onClick={handleQuery}>
-            Send
-          </Button>
+    <>
+
+      <div className='conversation-container'>
+        <div style={{ width: "3%", height: "100vh", backgroundColor: "grey" }}>
+
+        </div>
+        <Box className='b0' sx={{ width: '50%', marginTop: '1rem', }}>
+          <Box sx={{ flex: '1', textAlign: 'left' }}>
+            <TextArea label='LOTUS' value={"Hi, I'm LOTUS."} className="j" />
+            {conversations.map((conv, index) => (
+              <TextArea label='LOTUS' key={index} mt={2} value={conv.text} />
+            ))}
+            <Box className='querywrapper'>
+              <Tooltip placement='left' title='Add Messages'>
+                <IconButton>
+                  <PlaylistAddIcon style={{color: 'white'}} onClick={() => handleAddMessage(query)} />
+                </IconButton>
+              </Tooltip>
+              <TextField
+                className='query'
+                label='Query'  
+                id='outlined-size-small'
+                color='info'
+                style={{ backgroundColor: 'white'}}
+                defaultValue='/'
+                size='small'
+                sx={{ width: '40vw' }}
+                onChange={updateQuery}
+              />
+              <Button variant='text' endIcon={<SendIcon />} value={query} onClick={handleQuery}>
+                Send
+              </Button>
+            </Box>
+          </Box>
         </Box>
-      </Box>
-      <Box sx={{ flex: '1', marginLeft: '1rem' }}>
-        <h2>Preview Section</h2>
-        {previewConversations.map((preview, index) => (
-          <div key={index}>
-            <p className='p1'>{preview}</p>
-          </div>
-        ))}
-        <Button variant='outlined' onClick={handleAddToConversation}>
-          Add All to Conversation
-        </Button>
-      </Box>
-    </Box>
+        <Box className='b1' sx={{ width: '40%', height: "100vh", overflow: 'hidden', backgroundColor: "rgba(235, 229, 232, 0.2)", padding: "1rem" }}>
+          {
+            previewConversations.length === 0 && (
+              <h3 style={{ color: "white", fontFamily: 'monospace', backgroundColor: "rgba(235, 229, 232, 0.2)", fontSize: '2rem', padding: '1rem' }}>No Preview</h3>
+            )
+
+          }
+          {previewConversations.map((preview, index) => (
+            <div key={index}>
+              <TextArea label='Preview' mt={2} value={preview} />
+            </div>
+          ))}
+          {
+            previewConversations.length != 0 && (
+              <Button variant='outlined' style={{ backgroundColor: "blue", color: "white" }} onClick={handleAddToConversation}>
+                Add All to Conversation
+              </Button>
+            )
+          }
+        </Box>
+      </div>
+    </>
+
   );
 }
 
 export default Conversation;
+

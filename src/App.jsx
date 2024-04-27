@@ -28,12 +28,7 @@ function App() {
         </div>
     </div>
     <div className="main">
-      <div className="converstions">
         <Conversation/>
-      </div>
-      <div className="preview">
-
-      </div>
     </div>
     </>
   )

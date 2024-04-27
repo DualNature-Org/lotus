@@ -1,19 +1,21 @@
-input{
-    border-color: #fff;
-    color: #fff;
+.querywrapper{
+
+  position: absolute;
+  bottom: 8px ;
 }
 
-.querywrapper {
-    position: absolute;
-    bottom: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content:space-evenly;
-    width: 50vw;
-    left: 2rem;
-}
 
 .p1{
 color: aliceblue;
 font-size: x-large;    
+}
+.conversation-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.b0 {
+  /* width: 70%; */ /* No need to specify width here, it's set in JSX */
+  display: flex;
+  flex-direction: column;
 }
