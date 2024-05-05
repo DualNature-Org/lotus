@@ -43,7 +43,7 @@ function Conversation() {
   };
 
   const handleQuery = () => {
-    const url = 'http://127.0.0.1:8000/lotus/response/';
+    const url = 'https://dualnature.xyz/lotus/response/';
 
     const data = {
       conversation: conversation,
