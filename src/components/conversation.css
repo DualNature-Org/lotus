@@ -1,9 +1,8 @@
 .querywrapper{
-
-  position: absolute;
-  bottom: 8px ;
+  position: fixed;
+  bottom: 1rem;
+  left: 5rem;
 }
-
 
 .p1{
 color: aliceblue;

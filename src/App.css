@@ -1,19 +1,38 @@
-body {
-  /* max-width: 1280px; */
-  text-align: center;
-  background-color: #1f1e1e;
-  padding: 0rem;
-  margin: 0rem;
-}
-
 .statusbar{
+  position: absolute;
+  width: 100vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: hsl(0deg 0.27% 8.79%);
   padding: 0.5rem;
-
 }
+
+.option-bar{
+  width: 3rem;
+  position: relative;
+  height: 100vh;
+  /* height: 100vh; */
+  /* position: relative; */
+  background-color: #302b2e;
+  left: 0;
+  top: 2.5rem;
+}
+
+.conversation{
+  margin-top: 4rem;
+  height: 80vh;
+  overflow: scroll;
+}
+
+.preview-bar{
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .left{
   display: flex;
 

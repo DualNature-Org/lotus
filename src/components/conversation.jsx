@@ -1,22 +1,34 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
 import './conversation.css';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+
+import { Box, TextField, Button, CircularProgress } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
+
+import SendIcon from '@mui/icons-material/Send';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import DownloadIcon from '@mui/icons-material/Download';
 import IconButton from '@mui/material/IconButton';
+import ReferenceIcon from '@mui/icons-material/Plagiarism';
+import PptIcon from '@mui/icons-material/Slideshow';
+import FileAttachIcon from '@mui/icons-material/FilePresent';
+
 import TextArea from './textarea';
+import Preview from './preview';
+import NoPreview from './nopreview';
+
+import { Document, Packer, Paragraph } from 'docx';
+
 
 function Conversation() {
-  const [userInput, setUserInput] = useState('');
+  // const [userInput, setUserInput] = useState('');
   const [query, setQuery] = useState('');
-  const [assistantResponse, setAssistantResponse] = useState("Enter Claude's response...");
-  const [status, setStatus] = useState('1');
-  const [conversations, setConversations] = useState([]);
+  const [loading, setLoading] = useState(false); 
+  // const [assistantResponse, setAssistantResponse] = useState("Enter Claude's response...");
+  const [conversation, setConversation] = useState([]);
   const [previewConversations, setPreviewConversations] = useState([
   ]);
 
-  const [value, setValue] = useState('');
+  const [preview, setPreview] = useState('');
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -26,10 +38,15 @@ function Conversation() {
     setQuery(event.target.value);
   };
 
+  const updatePreview = (event) => {
+    setPreview(event.target.value)
+  };
+
   const handleQuery = () => {
-    const url = 'https://dualnature.xyz/lotus/response/';
+    const url = 'http://127.0.0.1:8000/lotus/response/';
 
     const data = {
+      conversation: conversation,
       query: query,
     };
 
@@ -40,6 +57,8 @@ function Conversation() {
       },
       body: JSON.stringify(data),
     };
+
+    setLoading(true);
 
     fetch(url, options)
       .then((response) => {
@@ -57,83 +76,154 @@ function Conversation() {
       })
       .catch((error) => {
         console.error('There was a problem with your fetch operation:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   const handleAddMessage = (text) => {
-    setConversations([
-      ...conversations,
-      { index: 1 + conversations[conversations.length - 1], text: text },
+    setConversation([
+      ...conversation,
+      { origin: "user" ,index: 1 + conversation[conversation.length - 1], content: text },
     ]);
-    setUserInput('');
-    setAssistantResponse("Enter Lotus's response...");
   };
 
   const handleAddToConversation = () => {
-    setConversations([...conversations, ...previewConversations.map((text, index) => ({
-      index: conversations.length + index + 1,
-      text: text,
+    setConversation([...conversation, ...previewConversations.map((text, index) => ({
+      origin: "lotus",
+      index: conversation.length + index + 1,
+      content: text,
     }))]);
-    setPreviewConversations([]); // Clear preview after adding to main conversation
+    setPreviewConversations([]); 
+  };
+
+  const handleDeleteConversation = (index) => {
+    const updatedConversation = conversation.filter((_, i) => i !== index);
+    setConversation(updatedConversation);
+  };
+
+  const downloadConversationAsDocx = () => {
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: conversation.flatMap(conv => {
+          const contentParts = conv.content.split('\n');
+          return contentParts.map(contentPart => new Paragraph(contentPart));
+        })
+      }]
+    });
+  
+    // Convert the document to a buffer
+    Packer.toBlob(doc).then((blob) => {
+      // Create a URL for the blob
+      const url = URL.createObjectURL(blob);
+  
+      // Create a link element and trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'conversation.docx';
+      document.body.appendChild(link);
+      link.click();
+  
+      // Clean up
+      URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    });
   };
 
   return (
     <>
-
       <div className='conversation-container'>
-        <div style={{ width: "3%", height: "100vh", backgroundColor: "grey" }}>
-
+        <div className='option-bar'>
+          <Tooltip placement='right' title='Download Conversation as Docs'>
+            <IconButton onClick={downloadConversationAsDocx}>
+              <DownloadIcon style={{ color: 'white' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip placement='right' title='Search for References'>
+            <IconButton >
+              <ReferenceIcon style={{color: 'white'}} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip placement='right' title='Create Presentation'>
+            <IconButton >
+              <PptIcon style={{color: 'white'}} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip placement='right' title='Create Presentation'>
+            <IconButton >
+              <PptIcon style={{color: 'white'}} />
+            </IconButton>
+          </Tooltip>
         </div>
-        <Box className='b0' sx={{ width: '50%', marginTop: '1rem', }}>
+
+        <Box className='conversation'>
           <Box sx={{ flex: '1', textAlign: 'left' }}>
-            <TextArea label='LOTUS' value={"Hi, I'm LOTUS."} className="j" />
-            {conversations.map((conv, index) => (
-              <TextArea label='LOTUS' key={index} mt={2} value={conv.text} />
-            ))}
-            <Box className='querywrapper'>
-              <Tooltip placement='left' title='Add Messages'>
-                <IconButton>
-                  <PlaylistAddIcon style={{color: 'white'}} onClick={() => handleAddMessage(query)} />
-                </IconButton>
-              </Tooltip>
-              <TextField
-                className='query'
-                label='Query'  
-                id='outlined-size-small'
-                color='info'
-                style={{ backgroundColor: 'white'}}
-                defaultValue='/'
-                size='small'
-                sx={{ width: '40vw' }}
-                onChange={updateQuery}
+            {conversation.map((conv, index) => (
+              <TextArea label='LOTUS' key={index} mt={2} value={conv.content} writingEffect={true} 
+              index={index}
+              handleDeleteConversation={handleDeleteConversation}
               />
-              <Button variant='text' endIcon={<SendIcon />} value={query} onClick={handleQuery}>
-                Send
-              </Button>
-            </Box>
+            ))}
           </Box>
         </Box>
-        <Box className='b1' sx={{ width: '40%', height: "100vh", overflow: 'hidden', backgroundColor: "rgba(235, 229, 232, 0.2)", padding: "1rem" }}>
+
+        <Box className='preview-bar' sx={{ width: '40%', height: "90vh", overflow: 'scroll', backgroundColor: "rgba(235, 229, 232, 0.2)", padding: "1rem" }}>
+          
           {
             previewConversations.length === 0 && (
-              <h3 style={{ color: "white", fontFamily: 'monospace', backgroundColor: "rgba(235, 229, 232, 0.2)", fontSize: '2rem', padding: '1rem' }}>No Preview</h3>
-            )
+              <div className='loading-section'>
+                <NoPreview />
 
+                {loading && <CircularProgress />}
+              </div>
+            )
           }
           {previewConversations.map((preview, index) => (
             <div key={index}>
-              <TextArea label='Preview' mt={2} value={preview} />
+               <Preview
+                label='Preview'
+                mt={2}
+                value={preview}
+                writingEffect={true}
+              />
             </div>
           ))}
           {
             previewConversations.length != 0 && (
-              <Button variant='outlined' style={{ backgroundColor: "blue", color: "white" }} onClick={handleAddToConversation}>
+              <Button variant='outlined' style={{ backgroundColor: "blue", color: "white", position: 'absolute', bottom: '2rem' }} onClick={handleAddToConversation}>
                 Add All to Conversation
               </Button>
             )
           }
         </Box>
       </div>
+
+      <Box className='querywrapper'>
+        <Tooltip placement='left' title='Add Messages'>
+          <IconButton>
+            <PlaylistAddIcon style={{color: 'white'}} onClick={() => handleAddMessage(query)} />
+          </IconButton>
+        </Tooltip>
+        <TextField
+          className='query'
+          label='Query'  
+          id='outlined-size-small'
+          color='error'
+          multiline
+          maxRows={3} 
+          style={{ backgroundColor: 'grey'}}
+          defaultValue='/'
+          size='small'
+          sx={{ width: '40vw', borderRadius: "8px" }}
+          InputLabelProps={{ style: { color: 'white' } }}
+          onChange={updateQuery}
+        />
+        <Button variant='text' endIcon={<SendIcon />} value={query} onClick={handleQuery}>
+          Send
+        </Button>
+      </Box>
     </>
 
   );
