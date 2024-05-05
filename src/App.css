@@ -22,7 +22,7 @@
 .conversation{
   margin-top: 4rem;
   height: 80vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .preview-bar{

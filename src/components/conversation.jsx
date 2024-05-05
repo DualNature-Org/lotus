@@ -169,7 +169,7 @@ function Conversation() {
           </Box>
         </Box>
 
-        <Box className='preview-bar' sx={{ width: '40%', height: "90vh", overflow: 'scroll', backgroundColor: "rgba(235, 229, 232, 0.2)", padding: "1rem" }}>
+        <Box className='preview-bar' sx={{ width: '40%', height: "90vh", overflow: 'auto', backgroundColor: "rgba(235, 229, 232, 0.2)", padding: "1rem" }}>
           
           {
             previewConversations.length === 0 && (
