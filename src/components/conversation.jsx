@@ -43,7 +43,7 @@ function Conversation() {
   };
 
   const handleQuery = () => {
-    const url = 'https://dualnature.xyz/lotus/response/';
+    const url = 'http://16.171.44.65:8000/lotus/response/';
 
     const data = {
       conversation: conversation,
@@ -52,6 +52,7 @@ function Conversation() {
 
     const options = {
       method: 'POST',
+      // mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
