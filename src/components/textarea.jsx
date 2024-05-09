@@ -53,9 +53,6 @@ function TextArea(props){
           resize: 'none',
         }}
       />
-
-      
-
     </div>
   );
 };

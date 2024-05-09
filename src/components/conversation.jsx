@@ -15,8 +15,7 @@ import FileAttachIcon from '@mui/icons-material/FilePresent';
 import TextArea from './textarea';
 import Preview from './preview';
 import NoPreview from './nopreview';
-
-import { Document, Packer, Paragraph } from 'docx';
+import { Document, Paragraph, Packer, Table, TableCell, TableRow } from 'docx';
 
 
 function Conversation() {
@@ -43,7 +42,7 @@ function Conversation() {
   };
 
   const handleQuery = () => {
-    const url = 'http://16.171.44.65:8000/lotus/response/';
+    const url = 'https://dualnature.xyz/lotus/response/';
 
     const data = {
       conversation: conversation,
@@ -69,7 +68,7 @@ function Conversation() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setPreviewConversations([
           ...previewConversations,
           data['output'],
@@ -80,6 +79,7 @@ function Conversation() {
       })
       .finally(() => {
         setLoading(false);
+        setQuery('')
       });
   };
 
@@ -88,6 +88,7 @@ function Conversation() {
       ...conversation,
       { origin: "user" ,index: 1 + conversation[conversation.length - 1], content: text },
     ]);
+    setQuery('')
   };
 
   const handleAddToConversation = () => {
@@ -104,13 +105,41 @@ function Conversation() {
     setConversation(updatedConversation);
   };
 
+  const handleDeletePreview = (index) => {
+    const updatedPreview = previewConversations.filter((_, i) => i !== index);
+    setPreviewConversations(updatedPreview);
+  };
+
   const downloadConversationAsDocx = () => {
     const doc = new Document({
       sections: [{
         properties: {},
         children: conversation.flatMap(conv => {
-          const contentParts = conv.content.split('\n');
-          return contentParts.map(contentPart => new Paragraph(contentPart));
+          // Check if the conversation part resembles a table
+          const isTable = conv.content.includes('|') && conv.content.includes('---');
+          if (isTable) {
+            // Split the table into rows
+            const rows = conv.content.split('\n');
+            // Remove in rows
+            const validRows = rows.filter(row => row.trim() !== '' && !row.includes('---'));
+            // Create table cells from the rows
+            const tableCells = validRows.map(row => {
+              const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell !== '');
+              return new TableRow({
+                children: cells.map(cell => new TableCell({
+                  children: [new Paragraph(cell)]
+                }))
+              });
+            });
+            // Create a table with the extracted cells
+            return [new Table({
+              rows: tableCells
+            })];
+          } else {
+            // If not a table, create paragraphs
+            const contentParts = conv.content.split('\n');
+            return contentParts.map(contentPart => new Paragraph(contentPart));
+          }
         })
       }]
     });
@@ -132,6 +161,7 @@ function Conversation() {
       document.body.removeChild(link);
     });
   };
+  
 
   return (
     <>
@@ -187,13 +217,15 @@ function Conversation() {
                 label='Preview'
                 mt={2}
                 value={preview}
+                index={index}
                 writingEffect={true}
+                handleDeletePreview={handleDeletePreview}
               />
             </div>
           ))}
           {
             previewConversations.length != 0 && (
-              <Button variant='outlined' style={{ backgroundColor: "blue", color: "white", position: 'absolute', bottom: '2rem' }} onClick={handleAddToConversation}>
+              <Button variant='outlined' style={{ color: "white", position: 'absolute', bottom: '2rem' }} onClick={handleAddToConversation}>
                 Add All to Conversation
               </Button>
             )
@@ -219,9 +251,11 @@ function Conversation() {
           size='small'
           sx={{ width: '40vw', borderRadius: "8px" }}
           InputLabelProps={{ style: { color: 'white' } }}
+          value={query}
           onChange={updateQuery}
         />
-        <Button variant='text' endIcon={<SendIcon />} value={query} onClick={handleQuery}>
+        <Button variant='text' endIcon={<SendIcon />} value={query} onClick={handleQuery}
+        sx={{color: '#fff'}}>
           Send
         </Button>
       </Box>

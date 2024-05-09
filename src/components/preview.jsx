@@ -9,8 +9,8 @@ function Preview(props){
   const writingEffectRef = useRef(null);
 
   const icon_style = {
-    width: '1rem', 
-    height: '1rem', 
+    width: '1.2rem', 
+    height: '1.2rem', 
     marginRight: '.5rem',
     marginBottom: '.5rem',
     marginTop: '.5rem',
@@ -64,17 +64,21 @@ function Preview(props){
     navigator.clipboard.writeText(props.value);
   };
 
+  const handleDeleteClick = () => {
+    props.handleDeletePreview(props.index);
+  };
 
   return (
     <div style={{ marginBottom: '1rem' }}>
       <label
         style={{
-          fontSize: '0.5rem',
+          fontSize: '0.7rem',
           fontWeight: 'bold',
           color: '#fff',
           textAlign: 'left',
-          marginBottom: '0.5rem',
+          // marginBottom: '0.5rem',
           display: 'block',
+          margin: '.5rem',
         }}
       >
         {props.label}
@@ -84,20 +88,24 @@ function Preview(props){
         rows={rows}
         ref={textAreaRef}
         style={{
-          width: '40vw',
-          padding: '0.75rem',
+          width: '38vw',
+          border: 'none',
+          outline: 'none',
+          padding: '1rem',
           fontSize: '1rem',
           backgroundColor: '#333',
           color: '#fff',
           resize: 'none',
+          borderRadius: '8px',
+          opacity: '0.8',
         }}
         onChange={handleChange}
       />
 
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginLeft: '.3rem' }}>
         <CopyIcon style={icon_style} onClick={handleCopyClick}/>
+        <DeleteIcon style={icon_style} onClick={handleDeleteClick} />
       </div>
-
     </div>
   );
 };
