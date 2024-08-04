@@ -17,7 +17,6 @@ import Preview from './preview';
 import NoPreview from './nopreview';
 import { Document, Paragraph, Packer, Table, TableCell, TableRow } from 'docx';
 
-
 function Conversation() {
   // const [userInput, setUserInput] = useState('');
   const [query, setQuery] = useState('');
@@ -41,8 +40,42 @@ function Conversation() {
     setPreview(event.target.value)
   };
 
+  const handleAI = () => {
+    const url = 'http://127.0.0.1:8000/lotus/ai/';
+    const data = {
+      conversation: conversation,
+    };
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    setLoading(true);
+    fetch(url, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setConversation(
+          data['output']
+        );
+      })
+      .catch((error) => {
+        console.error('There was a problem with your fetch operation:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
   const handleQuery = () => {
-    const url = 'https://dualnature.xyz/lotus/response/';
+    const url = 'http://127.0.0.1:8000/lotus/response/';
 
     const data = {
       conversation: conversation,
@@ -183,7 +216,7 @@ function Conversation() {
             </IconButton>
           </Tooltip>
           <Tooltip placement='right' title='Create Presentation'>
-            <IconButton >
+            <IconButton onClick={handleAI}>
               <PptIcon style={{color: 'white'}} />
             </IconButton>
           </Tooltip>
@@ -265,4 +298,3 @@ function Conversation() {
 }
 
 export default Conversation;
-
