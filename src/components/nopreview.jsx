@@ -16,7 +16,7 @@ const NoPreview = () => {
 
   return (
     <div style={divStyle}>
-      No Preview
+      No Context
     </div>
   );
 };

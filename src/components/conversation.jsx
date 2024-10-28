@@ -14,7 +14,7 @@ import FileAttachIcon from '@mui/icons-material/FilePresent';
 
 import TextArea from './textarea';
 import Preview from './preview';
-import NoPreview from './nopreview';
+import NoPreview from './NoPreview';
 import { Document, Paragraph, Packer, Table, TableCell, TableRow } from 'docx';
 
 function Conversation() {
@@ -40,42 +40,10 @@ function Conversation() {
     setPreview(event.target.value)
   };
 
-  const handleAI = () => {
-    const url = 'http://127.0.0.1:8000/lotus/ai/';
-    const data = {
-      conversation: conversation,
-    };
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    };
-    setLoading(true);
-    fetch(url, options)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setConversation(
-          data['output']
-        );
-      })
-      .catch((error) => {
-        console.error('There was a problem with your fetch operation:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
+
 
   const handleQuery = () => {
-    const url = 'https://dualnature.xyz/lotus/response/';
+    const url = 'http://127.0.0.1:8000/lotus/response/';
 
     const data = {
       conversation: conversation,
@@ -116,85 +84,9 @@ function Conversation() {
       });
   };
 
-  const handleAddMessage = (text) => {
-    setConversation([
-      ...conversation,
-      { origin: "user" ,index: 1 + conversation[conversation.length - 1], content: text },
-    ]);
-    setQuery('')
-  };
-
-  const handleAddToConversation = () => {
-    setConversation([...conversation, ...previewConversations.map((text, index) => ({
-      origin: "lotus",
-      index: conversation.length + index + 1,
-      content: text,
-    }))]);
-    setPreviewConversations([]); 
-  };
-
-  const handleDeleteConversation = (index) => {
-    const updatedConversation = conversation.filter((_, i) => i !== index);
-    setConversation(updatedConversation);
-  };
-
-  const handleDeletePreview = (index) => {
-    const updatedPreview = previewConversations.filter((_, i) => i !== index);
-    setPreviewConversations(updatedPreview);
-  };
-
-  const downloadConversationAsDocx = () => {
-    const doc = new Document({
-      sections: [{
-        properties: {},
-        children: conversation.flatMap(conv => {
-          // Check if the conversation part resembles a table
-          const isTable = conv.content.includes('|') && conv.content.includes('---');
-          if (isTable) {
-            // Split the table into rows
-            const rows = conv.content.split('\n');
-            // Remove in rows
-            const validRows = rows.filter(row => row.trim() !== '' && !row.includes('---'));
-            // Create table cells from the rows
-            const tableCells = validRows.map(row => {
-              const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell !== '');
-              return new TableRow({
-                children: cells.map(cell => new TableCell({
-                  children: [new Paragraph(cell)]
-                }))
-              });
-            });
-            // Create a table with the extracted cells
-            return [new Table({
-              rows: tableCells
-            })];
-          } else {
-            // If not a table, create paragraphs
-            const contentParts = conv.content.split('\n');
-            return contentParts.map(contentPart => new Paragraph(contentPart));
-          }
-        })
-      }]
-    });
   
-    // Convert the document to a buffer
-    Packer.toBlob(doc).then((blob) => {
-      // Create a URL for the blob
-      const url = URL.createObjectURL(blob);
-  
-      // Create a link element and trigger the download
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'conversation.docx';
-      document.body.appendChild(link);
-      link.click();
-  
-      // Clean up
-      URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-    });
-  };
-  
+
+
 
   return (
     <>

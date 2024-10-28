@@ -1,38 +1,36 @@
-import { useState } from 'react'
-import './App.css'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Drawer, Button } from '@mui/material';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-// import CircularWithValueLabel from './components/progress'
-import Conversation from './components/conversation';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute'
+import Navigation from './components/Navigation';
+import Login from './pages/Login'
+import Home from './pages/Main'
+// import Conversation from './components/conversation';
 
 function App() {
-  const [drawer, setdrawer] = useState(false)
+  
   const handle_menu = () => {
-    setdrawer(!drawer)
-  }
+    setdrawer(!drawer);
+  };
   
   return (
-    <>
-    <div className='statusbar'>
-      <div className='left'>
-
-        <AddCircleOutlineIcon className='icons'/>
-        <FormatListBulletedIcon className='icons' onClick = {handle_menu}/>
-
-        <h2>LOTUS</h2>
-        <Drawer open={drawer} onClose={handle_menu}>
-          {'ORE PIYA'}
-        </Drawer>
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        <Navigation />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              // <ProtectedRoute>
+                <div className="main">
+                  <Home />
+                </div>
+              // </ProtectedRoute>
+            }
+          />
+        </Routes>
       </div>
-      <div className='right'>
-        </div>
-    </div>
-    <div className="main">
-        <Conversation/>
-    </div>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
