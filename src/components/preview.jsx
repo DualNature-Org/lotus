@@ -3,8 +3,35 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import ReferenceList from './ReferenceList';
-import NoPreview from './NoPreview';
+// import NoPreview from './NoPreview';
 
+const NoPreview = () => {
+  return (
+    <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+      <div className="w-16 h-16 mb-4">
+        <svg
+          className="w-full h-full text-teal-500/50"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+      </div>
+      <h3 className="text-lg font-semibold text-teal-100 mb-2">No Preview Available</h3>
+      <p className="text-teal-200/70 max-w-sm">
+        Select a tool from the sidebar to generate content or view existing tool responses.
+      </p>
+    </div>
+  );
+};
+
+// export default NoPreview;
 
 // Tool Response List Item
 const ToolResponseItem = ({ toolName, response, isActive, onClick }) => {
