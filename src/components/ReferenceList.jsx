@@ -1,37 +1,8 @@
 import React, { useState } from 'react';
 
 // Sample reference data
-const sampleReferences = [
-  {
-    authors: ["Smith John", "Wilson Mark", "Brown Sarah"],
-    year: 2023,
-    title: "Modern Web Development Practices",
-    publisher: "IEEE Journal of Software Engineering",
-    volume: "45(2)",
-    page: "234-245",
-    link: "https://doi.org/10.1234/example"
-  },
-  {
-    authors: ["Johnson Robert", "Lee Michelle"],
-    year: 2022,
-    title: "Understanding React Performance Optimization",
-    publisher: "ACM Computing Surveys",
-    volume: "54(3)",
-    page: "167-189",
-    link: "https://doi.org/10.5678/example"
-  },
-  {
-    authors: ["Garcia Carlos"],
-    year: 2024,
-    title: "The Future of Frontend Development",
-    publisher: "Web Technologies Quarterly",
-    volume: "12(1)",
-    page: "45-58",
-    link: "https://doi.org/10.9012/example"
-  }
-];
 
-const ReferenceList = () => {
+export default function ReferenceList(props){
   const [style, setStyle] = useState('apa');
   const [showLinks, setShowLinks] = useState(false);
 
@@ -123,7 +94,7 @@ const ReferenceList = () => {
 
       {/* Reference List */}
       <div className="space-y-2">
-        {sampleReferences.map((ref, index) => (
+        {props.toolResponse.map((ref, index) => (
           <div 
             key={index} 
             className="p-2 bg-teal-900 rounded text-teal-100 transition-colors text-left"
@@ -136,4 +107,4 @@ const ReferenceList = () => {
   );
 };
 
-export default ReferenceList;
+// export default ReferenceList;

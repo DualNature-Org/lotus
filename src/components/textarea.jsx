@@ -4,6 +4,11 @@ const TextArea = ({ value, origin, index, handleDeleteConversation }) => {
   const textAreaRef = useRef(null);
   const [displayedText, setDisplayedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [shouldShowExpand, setShouldShowExpand] = useState(false);
+
+  // Function to count lines
+  const countLines = (text) => text.split('\n').length;
 
   // Typing effect for Lotus messages
   useEffect(() => {
@@ -21,14 +26,21 @@ const TextArea = ({ value, origin, index, handleDeleteConversation }) => {
           clearInterval(typingInterval);
           setIsTypingComplete(true);
         }
-      }, 20);
+      }, 10);
 
       return () => clearInterval(typingInterval);
     } else {
-      setDisplayedText(value);
+      // For user messages, check if we need to truncate
+      const lines = value.split('\n');
+      if (lines.length > 10 && !isExpanded) {
+        setShouldShowExpand(true);
+        setDisplayedText(lines.slice(0, 10).join('\n'));
+      } else {
+        setDisplayedText(value);
+      }
       setIsTypingComplete(true);
     }
-  }, [value, origin]);
+  }, [value, origin, isExpanded]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -47,7 +59,6 @@ const TextArea = ({ value, origin, index, handleDeleteConversation }) => {
   };
 
   const handleRetryClick = () => {
-    // Implement retry logic
     console.log('Retry message');
   };
 
@@ -55,22 +66,22 @@ const TextArea = ({ value, origin, index, handleDeleteConversation }) => {
     handleDeleteConversation(index);
   };
 
+  const handleExpandClick = () => {
+    setIsExpanded(true);
+    setDisplayedText(value);
+  };
+
   return (
     <div className="mb-6 max-w-4xl">
-      <div className={`relative group ${origin === 'user' ? 'ml-auto' : 'mr-auto'} max-w-2xl`}>
+      <div className={`relative group m-auto max-w-2xl`}>
         {/* Message Container */}
         <div
           className={`relative rounded-lg p-4 mb-2 ${
             origin === 'user'
-              ? 'bg-teal-950 ml-auto'
-              : 'bg-teal-900/50 mr-auto'
+              ? 'bg-teal-900/50 ml-auto' // Changed color for user messages
+              : 'bg-teal-700/50 mr-auto'
           }`}
         >
-          {/* Origin Label */}
-          {/* <div className="absolute -top-5 left-4 text-xs text-gray-400 font-medium">
-            {origin === 'user' ? 'You' : 'Lotus'}
-          </div> */}
-
           {/* Textarea */}
           <textarea
             ref={textAreaRef}
@@ -84,6 +95,16 @@ const TextArea = ({ value, origin, index, handleDeleteConversation }) => {
             }}
           />
 
+          {/* Show Complete Button */}
+          {shouldShowExpand && !isExpanded && origin === 'user' && (
+            <button
+              onClick={handleExpandClick}
+              className="absolute -bottom-6 left-0 text-sm text-teal-400 hover:text-teal-300 transition-colors"
+            >
+              Show Complete Message...
+            </button>
+          )}
+
           {/* Typing indicator for Lotus */}
           {origin === 'lotus' && !isTypingComplete && (
             <div className="absolute bottom-2 right-2 flex gap-1">
@@ -94,7 +115,7 @@ const TextArea = ({ value, origin, index, handleDeleteConversation }) => {
           )}
         </div>
 
-        {/* Action Buttons - Now always on right side */}
+        {/* Action Buttons */}
         <div className={`flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-in-out`}>
           {origin === 'lotus' ? (
             // Lotus message actions

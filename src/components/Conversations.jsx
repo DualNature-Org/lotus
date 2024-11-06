@@ -6,15 +6,15 @@ import TextArea from './textarea';
 const Conversations = ({ conversations, onDeleteConversation }) => {
   return (
     <div className="ml-2 w-3/5 h-[calc(100vh-80px)] overflow-y-auto p-4">
-      <Box className="space-y-4">
+      <Box className="space-y-4 mb-12">
         {conversations.map((conv, index) => (
           <TextArea
             key={index}
-            label="LOTUS"
+            // label="LOTUS"
             value={conv.content}
-            writingEffect={true}
+            writingEffect={conv.writingEffect}
             index={index}
-            origin={"lotus"}
+            origin={conv.origin}
             handleDeleteConversation={onDeleteConversation}
           />
         ))}

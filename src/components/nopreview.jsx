@@ -1,22 +1,27 @@
 import React from 'react';
 
 const NoPreview = () => {
-  const divStyle = {
-    width: '200px',
-    height: '200px',
-    borderRadius: '50%',
-    background: 'radial-gradient(circle, #303030, #212121)',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'white',
-    fontSize: '2rem',
-  };
-
   return (
-    <div style={divStyle}>
-      No Context
+    <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+      <div className="w-16 h-16 mb-4">
+        <svg
+          className="w-full h-full text-teal-500/50"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+      </div>
+      <h3 className="text-lg font-semibold text-teal-100 mb-2">No Preview Available</h3>
+      <p className="text-teal-200/70 max-w-sm">
+        Select a tool from the sidebar to generate content or view existing tool responses.
+      </p>
     </div>
   );
 };

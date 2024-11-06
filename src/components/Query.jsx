@@ -4,8 +4,8 @@ const Query = ({ query, onQueryChange, onSend, onAddMessage }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className="sticky bottom-0 w-full flex justify-start">
-      <div className="w-[60%] bg-[rgb(5,61,60)] rounded-t-xl shadow-lg">
+    <div className="sticky bottom-0 flex justify-start z-0">
+      <div className="ml-4 w-[58%] bg-[rgb(5,61,60)] rounded-t-xl shadow-lg">
         <div className="relative flex items-center p-4">
           {/* Left side icons inside input */}
           <div className="absolute left-6 flex items-center space-x-2">

@@ -6,12 +6,43 @@ import Preview from '../components/preview';
 import ChatHeader from '../components/ChatHeader';
 import { Document, Paragraph, Packer, Table, TableCell, TableRow } from 'docx';
 
+const sampleResponse = [[ 'references',[
+  {
+    authors: ["Smith John", "Wilson Mark", "Brown Sarah"],
+    year: 2023,
+    title: "Modern Web Development Practices",
+    publisher: "IEEE Journal of Software Engineering",
+    volume: "45(2)",
+    page: "234-245",
+    link: "https://doi.org/10.1234/example"
+  },
+  {
+    authors: ["Johnson Robert", "Lee Michelle"],
+    year: 2022,
+    title: "Understanding React Performance Optimization",
+    publisher: "ACM Computing Surveys",
+    volume: "54(3)",
+    page: "167-189",
+    link: "https://doi.org/10.5678/example"
+  },
+  {
+    authors: ["Garcia Carlos"],
+    year: 2024,
+    title: "The Future of Frontend Development",
+    publisher: "Web Technologies Quarterly",
+    volume: "12(1)",
+    page: "45-58",
+    link: "https://doi.org/10.9012/example"
+  }
+]], ['outline', ['sample outline in dict format']] ];
+
 export default function Home(){
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [conversation, setConversation] = useState([]);
   const [chatTitle, setChatTitle] = useState('New Chat');
   const [isStarred, setIsStarred] = useState(false);
+  const [toolResponse, setToolResponse] = useState([])
   const [previewConversations, setPreviewConversations] = useState([]);
 
   const handleStarChat = () => {
@@ -40,7 +71,18 @@ export default function Home(){
       if (!response.ok) throw new Error('Network response was not ok');
       
       const data = await response.json();
-      setPreviewConversations([...previewConversations, data.output]);
+      if(data.output.tool){
+        // console.log(data.output.response)
+        setToolResponse([...toolResponse,
+          [data.output.tool, data.output.response]
+        ])
+      }
+      else{
+        console.log(data.output)
+        setConversation([...conversation,
+          { origin: "lotus" ,index: 1 + conversation[conversation.length - 1], content: data.output.response }
+        ])
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -85,19 +127,26 @@ export default function Home(){
 
   const handleAddMessage = (text) => {
     setConversation([
-      ...conversation,
-      { origin: "lotus" ,index: 1 + conversation[conversation.length - 1], content: text },
+      ...conversation,{ 
+        origin: "user" ,
+        index: 1 + conversation[conversation.length - 1], 
+        content: text,
+        writingEffect: false, 
+      },
     ]);
     setQuery('')
   };
 
-  const handleAddToConversation = () => {
-    setConversation([...conversation, ...previewConversations.map((text, index) => ({
-      origin: "lotus",
-      index: conversation.length + index + 1,
-      content: text,
-    }))]);
-    setPreviewConversations([]); 
+  const handleAddToConversation = (message) => {
+    console.log('hello')
+    setConversation([
+      ...conversation,
+      {
+        origin: message.origin,
+        index: conversation.length + 1,
+        content: message.content
+      }
+    ]);
   };
 
   const handleDeleteConversation = (index) => {
@@ -178,6 +227,7 @@ export default function Home(){
         <Preview
           previewConversations={previewConversations}
           loading={loading}
+          toolResponse={toolResponse}
           onDeletePreview={handleDeletePreview}
           onAddToConversation={handleAddToConversation}
         />
