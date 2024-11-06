@@ -1,10 +1,9 @@
 // Preview.jsx
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Box, Button, CircularProgress } from '@mui/material';
-import PreviewItem from './PreviewItem';
-import NoPreview from './NoPreview';
+import { CircularProgress } from '@mui/material';
 import ReferenceList from './ReferenceList';
+import NoPreview from './NoPreview';
 
 
 // Tool Response List Item
