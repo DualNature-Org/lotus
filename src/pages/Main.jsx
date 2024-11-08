@@ -57,7 +57,7 @@ export default function Home(){
   const handleQuery = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://127.0.0.1:8000/lotus/response/', {
+      const response = await fetch('https://dualnature.xyz/lotus/response/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
